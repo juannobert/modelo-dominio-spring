@@ -3,18 +3,24 @@ package com.juannobert.modelo.services;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.juannobert.modelo.dto.ProductDTO;
 import com.juannobert.modelo.entities.Product;
 import com.juannobert.modelo.repositories.ProductRepository;
+import com.juannobert.modelo.services.exceptions.DatabaseIntegrityException;
+import com.juannobert.modelo.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class ProductService {
 
+	private final String ERROR_MESSAGE = "Product with id = %d not found";
 	@Autowired
 	private ProductRepository repository;
 	
@@ -34,5 +40,17 @@ public class ProductService {
 		entity = repository.save(entity);
 		return new ProductDTO(entity);
 	}
-
+	
+	public void delete(Long id){
+		try {
+			repository.deleteById(id);
+		}catch(EntityNotFoundException e) {
+			throw new ResourceNotFoundException(String.format(ERROR_MESSAGE, id));
+		}catch(DataIntegrityViolationException e) {
+			throw new DatabaseIntegrityException("Data base integrity violation");
+		}
+		
+	}
+	
+	
 }
