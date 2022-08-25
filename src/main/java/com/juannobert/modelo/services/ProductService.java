@@ -23,21 +23,20 @@ public class ProductService {
 	private final String ERROR_MESSAGE = "Product with id = %d not found";
 	@Autowired
 	private ProductRepository repository;
-	
+
 	@Transactional(readOnly = true)
-	public List<ProductDTO> findAll(){
+	public List<ProductDTO> findAll() {
 		List<Product> list = repository.findAll();
-		return list.stream()
-				.map(x -> new ProductDTO(x))
-				.collect(Collectors.toList());
+		return list.stream().map(x -> new ProductDTO(x)).collect(Collectors.toList());
 	}
-	
+
 	@Transactional(readOnly = true)
 	public ProductDTO findById(Long id) {
 		Product entity = repository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException(String.format(ERROR_MESSAGE, id)));
 		return new ProductDTO(entity);
 	}
+
 	@Transactional
 	public ProductDTO insert(ProductDTO dto) {
 		Product entity = new Product();
@@ -45,29 +44,31 @@ public class ProductService {
 		entity = repository.save(entity);
 		return new ProductDTO(entity);
 	}
+
 	
 	@Transactional
-	public ProductDTO update(Long id,ProductDTO dto) {
+	public ProductDTO update(Long id, ProductDTO dto) {
 		try {
-		Product entity = repository.getReferenceById(id);
-		BeanUtils.copyProperties(dto, entity,"id");
-		entity = repository.save(entity);
-		return new ProductDTO(entity);
-		}catch(EntityNotFoundException e) {
-			throw new ResourceNotFoundException(String.format(ERROR_MESSAGE, id));
+			Product entity = repository.getReferenceById(id);
+			entity.setName(dto.getName());
+			entity.setPrice(dto.getPrice());
+			entity = repository.save(entity);
+			return new ProductDTO(entity);
+		} catch (javax.persistence.EntityNotFoundException e) {
+			System.out.println("caiu");
+			throw new ResourceNotFoundException("Not exist entity with id " + id);
 		}
 	}
-	
-	public void delete(Long id){
+
+	public void delete(Long id) {
 		try {
 			repository.deleteById(id);
-		}catch(EntityNotFoundException e) {
+		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException(String.format(ERROR_MESSAGE, id));
-		}catch(DataIntegrityViolationException e) {
+		} catch (DataIntegrityViolationException e) {
 			throw new DatabaseIntegrityException("Database integrity violation on DELETE product with id = " + id);
 		}
-		
+
 	}
-	
-	
+
 }
