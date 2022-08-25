@@ -49,12 +49,13 @@ public class ProductRepositoryTest {
 		Assertions.assertTrue(product.isPresent());
 	}
 	
-	
-	
-	
-	
-	
-	
+	@Test
+	public void findbyIdShouldReturnOptionalEmptyWhenIdDoesNotExists() {
+		Optional<Product> product = repository.findById(nonExistingId);
+		
+		Assertions.assertFalse(product.isPresent());
+		Assertions.assertTrue(product.isEmpty());
+	}
 	
 	
 	
