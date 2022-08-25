@@ -46,6 +46,18 @@ public class ProductService {
 		return new ProductDTO(entity);
 	}
 	
+	@Transactional
+	public ProductDTO update(Long id,ProductDTO dto) {
+		try {
+		Product entity = repository.getReferenceById(id);
+		BeanUtils.copyProperties(dto, entity,"id");
+		entity = repository.save(entity);
+		return new ProductDTO(entity);
+		}catch(EntityNotFoundException e) {
+			throw new ResourceNotFoundException(String.format(ERROR_MESSAGE, id));
+		}
+	}
+	
 	public void delete(Long id){
 		try {
 			repository.deleteById(id);
