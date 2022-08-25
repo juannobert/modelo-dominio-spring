@@ -47,7 +47,7 @@ public class ProductService {
 		}catch(EntityNotFoundException e) {
 			throw new ResourceNotFoundException(String.format(ERROR_MESSAGE, id));
 		}catch(DataIntegrityViolationException e) {
-			throw new DatabaseIntegrityException("Data base integrity violation");
+			throw new DatabaseIntegrityException("Database integrity violation on DELETE product with id = " + id);
 		}
 		
 	}
