@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import com.juannobert.modelo.entities.Product;
 import com.juannobert.modelo.repositories.ProductRepository;
+import com.juannobert.modelo.tests.ProductFactory;
 
 @DataJpaTest
 public class ProductRepositoryTest {
@@ -57,7 +58,19 @@ public class ProductRepositoryTest {
 		Assertions.assertTrue(product.isEmpty());
 	}
 	
-	
+	@Test
+	public void saveShouldPersistEntityWithAutoincrementWhenIdIsNull() {
+		Product product = ProductFactory.createProduct();
+		product.setId(null);
+		
+		product = repository.save(product);
+		
+		Assertions.assertNotNull(product);
+		Assertions.assertNotNull(product.getId());
+		Assertions.assertEquals(product.getId(), countProducts + 1);
+		
+		
+	}
 	
 	
 }
