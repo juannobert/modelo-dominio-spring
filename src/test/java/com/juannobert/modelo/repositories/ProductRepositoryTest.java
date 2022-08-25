@@ -1,4 +1,4 @@
-package com.juannobert.modelo.repository;
+package com.juannobert.modelo.repositories;
 
 import java.util.List;
 import java.util.Optional;
