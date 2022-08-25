@@ -32,7 +32,12 @@ public class ProductService {
 				.collect(Collectors.toList());
 	}
 	
-	
+	@Transactional(readOnly = true)
+	public ProductDTO findById(Long id) {
+		Product entity = repository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException(String.format(ERROR_MESSAGE, id)));
+		return new ProductDTO(entity);
+	}
 	@Transactional
 	public ProductDTO insert(ProductDTO dto) {
 		Product entity = new Product();

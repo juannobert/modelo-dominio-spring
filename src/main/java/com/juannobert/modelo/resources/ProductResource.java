@@ -29,6 +29,12 @@ public class ProductResource {
 		List<ProductDTO> list = service.findAll();
 		return ResponseEntity.ok(list);
 	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<ProductDTO> findById(@PathVariable Long id){
+		ProductDTO dto = service.findById(id);
+		return ResponseEntity.ok(dto);
+	}
 
 	@PostMapping
 	public ResponseEntity<ProductDTO> insert(@RequestBody ProductDTO dto){
