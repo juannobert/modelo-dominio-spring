@@ -8,6 +8,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.repository.config.RepositoryBeanDefinitionParser;
 
 import com.juannobert.modelo.entities.Product;
 import com.juannobert.modelo.repositories.ProductRepository;
@@ -43,7 +46,7 @@ public class ProductRepositoryTest {
 	}
 	
 	@Test
-	public void findbyIdShouldReturnOptionalNonEmptyWhenIdExist() {
+	public void findbyIdShouldReturnOptionalNonEmptyWhenIdExists() {
 		Optional<Product> product = repository.findById(existingId);
 		
 		Assertions.assertNotNull(product);
@@ -51,7 +54,7 @@ public class ProductRepositoryTest {
 	}
 	
 	@Test
-	public void findbyIdShouldReturnOptionalEmptyWhenIdDoesNotExists() {
+	public void findbyIdShouldReturnOptionalEmptyWhenIdDoesNotExist() {
 		Optional<Product> product = repository.findById(nonExistingId);
 		
 		Assertions.assertFalse(product.isPresent());
@@ -68,8 +71,25 @@ public class ProductRepositoryTest {
 		Assertions.assertNotNull(product);
 		Assertions.assertNotNull(product.getId());
 		Assertions.assertEquals(product.getId(), countProducts + 1);
+	}
+	
+	@Test
+	public void deleteSholdDeleteEntityWhenIdExists() {
 		
+		repository.deleteById(existingId);
 		
+		Optional<Product> product = repository.findById(existingId);
+		
+		Assertions.assertTrue(product.isEmpty());
+		
+	}
+	
+	@Test
+	public void deleteSholdThrowEntityNotFoundExceptionWhenIdDoesNotExist() {
+		
+		Assertions.assertThrows(EmptyResultDataAccessException.class, () ->{
+			repository.deleteById(nonExistingId);
+		});
 	}
 	
 	
