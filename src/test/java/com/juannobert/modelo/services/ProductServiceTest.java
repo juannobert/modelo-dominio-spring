@@ -4,6 +4,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,6 +43,7 @@ public class ProductServiceTest {
 		
 		when(repository.findAll()).thenReturn(list);
 		
+		when(repository.findById(existingId)).thenReturn(Optional.of(product));
 		
 	}
 	
@@ -54,6 +56,13 @@ public class ProductServiceTest {
 		Assertions.assertNotNull(result);
 	}
 	
+	@Test
+	public void findByIdShouldReturnEntityWhenIdExists() {
+		ProductDTO dto = service.findById(existingId);
+		
+		Assertions.assertNotNull(dto);
+		Assertions.assertNotNull(dto.getId());
+	}
 	
 	
 	
