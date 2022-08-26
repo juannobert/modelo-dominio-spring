@@ -1,5 +1,6 @@
 package com.juannobert.modelo.services;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
@@ -57,6 +58,8 @@ public class ProductServiceTest {
 		doNothing().when(repository).deleteById(existingId);
 		doThrow(EntityNotFoundException.class).when(repository).deleteById(nonExistingId);
 		doThrow(DataIntegrityViolationException.class).when(repository).deleteById(dependentId);
+		
+		when(repository.save(any())).thenReturn(product);
 
 	}
 
@@ -104,5 +107,13 @@ public class ProductServiceTest {
 		});
 	}
 	
-
+	@Test
+	public void saveShouldPersistEntityWithAutoincrementAndReturnProductDTOWhenIdIsNull() {
+		ProductDTO dto = ProductFactory.createProductDTO();
+		dto = service.insert(dto);
+		
+		Assertions.assertNotNull(dto);
+		Assertions.assertNotNull(dto.getId());
+	}
+	
 }

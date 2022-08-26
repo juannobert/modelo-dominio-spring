@@ -40,7 +40,7 @@ public class ProductService {
 	@Transactional
 	public ProductDTO insert(ProductDTO dto) {
 		Product entity = new Product();
-		BeanUtils.copyProperties(dto, entity);
+		BeanUtils.copyProperties(dto, entity,"id");
 		entity = repository.save(entity);
 		return new ProductDTO(entity);
 	}
