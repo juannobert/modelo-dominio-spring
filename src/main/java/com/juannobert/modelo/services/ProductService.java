@@ -54,7 +54,7 @@ public class ProductService {
 			entity.setPrice(dto.getPrice());
 			entity = repository.save(entity);
 			return new ProductDTO(entity);
-		} catch (javax.persistence.EntityNotFoundException e) {
+		} catch (EntityNotFoundException e) {
 			System.out.println("caiu");
 			throw new ResourceNotFoundException("Not exist entity with id " + id);
 		}

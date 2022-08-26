@@ -8,12 +8,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.repository.config.RepositoryBeanDefinitionParser;
 
 import com.juannobert.modelo.entities.Product;
-import com.juannobert.modelo.repositories.ProductRepository;
 import com.juannobert.modelo.tests.ProductFactory;
 
 @DataJpaTest
@@ -24,14 +21,12 @@ public class ProductRepositoryTest {
 	
 	private long existingId;
 	private long nonExistingId;
-	private long depententId;
 	private long countProducts;
 	
 	@BeforeEach
 	void setUp() throws Exception{
 		existingId = 2L;
 		nonExistingId = 1000L;
-		depententId = 1L;		
 		countProducts = 3L;
 	}
 	
