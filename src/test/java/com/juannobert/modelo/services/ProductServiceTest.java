@@ -17,6 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import com.juannobert.modelo.dto.ProductDTO;
 import com.juannobert.modelo.entities.Product;
 import com.juannobert.modelo.repositories.ProductRepository;
+import com.juannobert.modelo.services.exceptions.ResourceNotFoundException;
 import com.juannobert.modelo.tests.ProductFactory;
 
 @ExtendWith(SpringExtension.class)
@@ -44,6 +45,7 @@ public class ProductServiceTest {
 		when(repository.findAll()).thenReturn(list);
 		
 		when(repository.findById(existingId)).thenReturn(Optional.of(product));
+		when(repository.findById(nonExistingId)).thenReturn(Optional.empty());
 		
 	}
 	
@@ -62,6 +64,14 @@ public class ProductServiceTest {
 		
 		Assertions.assertNotNull(dto);
 		Assertions.assertNotNull(dto.getId());
+	}
+	
+	@Test
+	public void findByIdShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
+		Assertions.assertThrows(ResourceNotFoundException.class, () ->{
+				service.findById(nonExistingId);
+		});
+		
 	}
 	
 	
